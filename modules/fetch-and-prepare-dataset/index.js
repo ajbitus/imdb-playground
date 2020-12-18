@@ -82,7 +82,7 @@ const download = async (url, filename) => {
 const extract = async (sourceFilename, targetFilename) => {
   return new Promise((resolve, reject) => {
     console.log(
-      chalk.blue(
+      chalk.yellow(
         `Extracting from "${sourceFilename}" to "${targetFilename}"...`
       )
     );
