@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-const readline = require("readline");
-const chalk = require("chalk");
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+const chalk = require('chalk');
 
 const printTextFileWithColor = async (filePath, colorHexCode) => {
   chalk.reset();
@@ -16,8 +16,8 @@ const printTextFileWithColor = async (filePath, colorHexCode) => {
 };
 
 const showUserAndProject = async () => {
-  await printTextFileWithColor("user-logo.txt", "#0088AA");
-  await printTextFileWithColor("project-logo.txt", "#f3ce13");
+  await printTextFileWithColor('user-logo.txt', '#0088AA');
+  await printTextFileWithColor('project-logo.txt', '#f3ce13');
 };
 
 module.exports = { showUserAndProject: showUserAndProject };

@@ -1,11 +1,11 @@
-const https = require("https"),
-  fs = require("fs"),
-  path = require("path"),
-  zlib = require("zlib"),
-  _ = require("lodash"),
-  _cliProgress = require("cli-progress"),
-  chalk = require("chalk");
-const { pipeline } = require("stream");
+const https = require('https'),
+  fs = require('fs'),
+  path = require('path'),
+  zlib = require('zlib'),
+  _ = require('lodash'),
+  _cliProgress = require('cli-progress'),
+  chalk = require('chalk');
+const { pipeline } = require('stream');
 
 const download = async (url, filename) => {
   return await new Promise((resolve, reject) => {
@@ -23,59 +23,62 @@ const download = async (url, filename) => {
       file,
       receivedBytes = 0;
 
-    filePath = path.join(__dirname, "../..", ".dataset", filename);
+    filePath = path.join(__dirname, '../..', '.dataset', filename);
 
-    if (!fs.existsSync(path.join(__dirname, "../..", ".dataset"))) {
-      reject("Filepath invalth, check your directories and set paths.");
-    } else {
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-
-      file = fs.createWriteStream(filePath);
-
-      https
-        .get(
-          url,
-          {
-            accept: "binary/octet-stream",
-          },
-          (response) => {
-            if (
-              response.statusCode === 200 &&
-              _.includes(response.headers["content-type"], "stream")
-            ) {
-              const totalBytes = response.headers["content-length"];
-              progressBar.start(totalBytes, receivedBytes);
-
-              pipeline(response, file, (err) => {
-                if (err) {
-                  progressBar.stop();
-                  file.close();
-                  fs.unlinkSync(filePath);
-                  reject(err.message);
-                } else {
-                  progressBar.stop();
-                  setTimeout(() => {}, 1000);
-                  resolve(null);
-                }
-              });
-
-              response.on("data", (chunk) => {
-                receivedBytes += chunk.length;
-                progressBar.update(receivedBytes);
-              });
-            } else {
-              file.close();
-              fs.unlinkSync(filePath);
-              reject("Fetch response invalid");
-            }
-          }
-        )
-        .on("error", (err) => {
-          reject(err);
-        });
+    if (!fs.existsSync(path.join(__dirname, '../..', '.dataset'))) {
+      fs.mkdirSync(path.join(__dirname, '../..', '.dataset'));
+      chalk.blueBright(
+        `Folder ".dataset" not found, created it in project root location...`
+      );
     }
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    file = fs.createWriteStream(filePath);
+
+    https
+      .get(
+        url,
+        {
+          accept: 'binary/octet-stream',
+        },
+        (response) => {
+          if (
+            response.statusCode === 200 &&
+            _.includes(response.headers['content-type'], 'stream')
+          ) {
+            const totalBytes = response.headers['content-length'];
+            progressBar.start(totalBytes, receivedBytes);
+
+            pipeline(response, file, (err) => {
+              if (err) {
+                progressBar.stop();
+                file.close();
+                fs.unlinkSync(filePath);
+                reject(err.message);
+              } else {
+                progressBar.stop();
+                setTimeout(() => {}, 1000);
+                resolve(null);
+              }
+            });
+
+            response.on('data', (chunk) => {
+              receivedBytes += chunk.length;
+              progressBar.update(receivedBytes);
+            });
+          } else {
+            file.close();
+            fs.unlinkSync(filePath);
+            reject('Fetch response invalid');
+          }
+        }
+      )
+      .on('error', (err) => {
+        reject(err);
+      });
   });
 };
 
@@ -94,15 +97,15 @@ const extract = async (sourceFilename, targetFilename) => {
     );
     const sourceFilePath = path.join(
       __dirname,
-      "../..",
-      ".dataset",
+      '../..',
+      '.dataset',
       sourceFilename
     );
 
     const targetFilePath = path.join(
       __dirname,
-      "../..",
-      ".dataset",
+      '../..',
+      '.dataset',
       targetFilename
     );
     if (fs.existsSync(targetFilePath)) {
@@ -116,7 +119,7 @@ const extract = async (sourceFilename, targetFilename) => {
 
     progressBar.start(totalBytes, receivedBytes);
 
-    sourceFile.on("data", (chunk) => {
+    sourceFile.on('data', (chunk) => {
       receivedBytes += chunk.length;
       progressBar.update(receivedBytes);
     });
@@ -125,7 +128,7 @@ const extract = async (sourceFilename, targetFilename) => {
       if (err) {
         progressBar.stop();
         fs.unlinkSync(targetFilePath);
-        reject("Extraction failed!");
+        reject('Extraction failed!');
       } else {
         progressBar.update(totalBytes);
         progressBar.stop();
@@ -160,7 +163,7 @@ const downloadAndExtract = async (files) => {
       } else {
         if (
           fs.existsSync(
-            path.join(__dirname, "../..", ".dataset", file.filename)
+            path.join(__dirname, '../..', '.dataset', file.filename)
           )
         ) {
           fileCounter++;
@@ -170,11 +173,11 @@ const downloadAndExtract = async (files) => {
   }
 
   if (fileCounter === files.length) {
-    console.log(chalk.green("Dataset download and extract successful!"));
+    console.log(chalk.green('Dataset download and extract successful!'));
   } else {
     console.error(
       chalk.bgRed(
-        "Dataset listed and downloaded/extracted counts does not match!"
+        'Dataset listed and downloaded/extracted counts does not match!'
       )
     );
   }

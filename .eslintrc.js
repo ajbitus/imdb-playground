@@ -3,10 +3,11 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ["standard", "prettier", "prettier/standard"],
+  extends: ['eslint:recommended', 'prettier'],
+  overrides: [],
   parserOptions: {
-    ecmaVersion: 12,
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
   rules: {},
 };
