@@ -85,7 +85,9 @@ const readFromTSVToDBRaw = async (dataset, filePath) => {
 
   console.log(
     chalk.blueBright(
-      `Inserting raw records from "${dataset.filename}" to "temp.${dataset.name}" collection...`
+      `Inserting raw records from "${dataset.filename}" (Total: ${_.toNumber(
+        totalRecords
+      ).toLocaleString('en-IN')}) to "temp.${dataset.name}" collection...`
     )
   );
 
@@ -102,17 +104,27 @@ const readFromTSVToDBRaw = async (dataset, filePath) => {
 
   const parser = parse({
     delimiter: '\t',
-    columns: true,
+    // columns: true,
     relax_quotes: true,
     escape: '\\',
     ltrim: true,
     rtrim: true,
   });
 
-  let recordsInserted = 0;
+  let recordsInserted = 0,
+    recordsToBeInserted = [];
 
   parser.on('data', async (record) => {
     try {
+      // if (_.length(recordsToBeInserted) < 10000) {
+      //   recordsToBeInserted.push(record);
+      //   console.log(recordsToBeInserted.length);
+      // } else {
+      //   await collection.insertMany(recordsToBeInserted);
+      //   recordsInserted += _.length(recordsToBeInserted);
+      //   progressBar.update(recordsInserted);
+      //   recordsToBeInserted = [];
+      // }
       await collection.insertOne(record);
       recordsInserted++;
       progressBar.update(recordsInserted);
@@ -126,6 +138,7 @@ const readFromTSVToDBRaw = async (dataset, filePath) => {
   parser.on('error', (err) => {
     parser.end();
     fileReadStream.close();
+    console.error(err);
     return err.message;
   });
 
