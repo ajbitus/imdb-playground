@@ -1,5 +1,11 @@
 module.exports = [
   {
+    name: 'titles.ratings',
+    compressedFilename: 'title.ratings.tsv.gz',
+    filename: 'title.ratings.tsv',
+    url: 'https://datasets.imdbws.com/title.ratings.tsv.gz',
+  },
+  {
     name: 'name.basics',
     compressedFilename: 'name.basics.tsv.gz',
     filename: 'name.basics.tsv',
@@ -34,11 +40,5 @@ module.exports = [
     compressedFilename: 'title.principals.tsv.gz',
     filename: 'title.principals.tsv',
     url: 'https://datasets.imdbws.com/title.principals.tsv.gz',
-  },
-  {
-    name: 'titles.ratings',
-    compressedFilename: 'title.ratings.tsv.gz',
-    filename: 'title.ratings.tsv',
-    url: 'https://datasets.imdbws.com/title.ratings.tsv.gz',
   },
 ];

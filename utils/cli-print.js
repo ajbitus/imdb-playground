@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+const fs = require('node:fs');
+const path = require('node:path');
+const readline = require('node:readline');
 const chalk = require('chalk');
 
 const printTextFileWithColor = async (filePath, colorHexCode) => {
@@ -20,4 +20,4 @@ const showUserAndProject = async () => {
   await printTextFileWithColor('project-logo.txt', '#f3ce13');
 };
 
-module.exports = { showUserAndProject: showUserAndProject };
+module.exports = showUserAndProject;
